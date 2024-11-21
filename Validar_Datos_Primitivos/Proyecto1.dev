@@ -1,6 +1,6 @@
 [Project]
-FileName=Proyecto2.dev
-Name=Proyecto2
+FileName=Proyecto1.dev
+Name=Proyecto1
 Type=1
 Ver=2
 ObjFiles=
@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000000000000
-UnitCount=6
+UnitCount=3
 
 [VersionInfo]
 Major=1
@@ -51,7 +51,7 @@ AutoIncBuildNr=0
 SyncProduct=1
 
 [Unit1]
-FileName=..\..\..\..\Downloads\Lista_Simple\Lista_Simple\ListaEnlazada.cpp
+FileName=main.cpp
 CompileCpp=1
 Folder=
 Compile=1
@@ -61,7 +61,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\..\..\..\Downloads\Lista_Simple\Lista_Simple\main.cpp
+FileName=Validaciones.h
 CompileCpp=1
 Folder=
 Compile=1
@@ -71,37 +71,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\..\..\..\Downloads\Lista_Simple\Lista_Simple\ListaEnlazada.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit4]
-FileName=..\..\..\..\Downloads\Lista_Simple\Lista_Simple\Validar.cpp
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
-FileName=..\..\..\..\Downloads\Lista_Simple\Lista_Simple\Validar.h
-CompileCpp=1
-Folder=
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
-FileName=..\..\..\C-C++\ListaEjemplo2\Nodo.h
+FileName=Validaciones.cpp
 CompileCpp=1
 Folder=
 Compile=1
