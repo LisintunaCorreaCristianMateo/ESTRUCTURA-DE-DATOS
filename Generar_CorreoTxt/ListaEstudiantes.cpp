@@ -1,17 +1,21 @@
 #include "ListaEstudiantes.h"
+#include "Archivotxt.h" // Incluimos la nueva clase Archivos
 #include <iostream>
 #include <sstream>
-#include <cctype>
-#include <iomanip> // Para setw
+#include <iomanip>
+#include <cctype> // Para funciones de manipulación de caracteres
 
 using namespace std;
 
+// Constructor
 ListaEstudiantes::ListaEstudiantes() : cabeza(NULL) {}
 
+// Destructor
 ListaEstudiantes::~ListaEstudiantes() {
     liberarLista();
 }
 
+// Métodos de manipulación de cadenas
 string ListaEstudiantes::convertirMinusculas(const string& cadena) {
     string resultado = cadena;
     for (size_t i = 0; i < cadena.length(); ++i) {
@@ -36,6 +40,7 @@ string ListaEstudiantes::eliminarEspacios(const string& cadena) {
     return resultado;
 }
 
+// Métodos relacionados con generación de correos
 string ListaEstudiantes::generarCorreoBase(const string& primerNombre, const string& segundoNombre, const string& apellido) {
     char inicial1 = tolower(primerNombre[0]);
     char inicial2 = tolower(segundoNombre[0]);
@@ -71,15 +76,24 @@ string ListaEstudiantes::generarCorreoUnico(const string& baseCorreo) {
     return correoUnico;
 }
 
-void ListaEstudiantes::agregarEstudiante(const string& primerNombre, const string& segundoNombre, const string& apellido, const string& segundoApellido,const string& cedula) {
+// Métodos de manejo de la lista enlazada
+void ListaEstudiantes::agregarEstudiante(const string& primerNombre, const string& segundoNombre, const string& apellido, const string& segundoApellido, const string& cedula) {
     string correoBase = generarCorreoBase(primerNombre, segundoNombre, apellido);
     string correoUnico = generarCorreoUnico(correoBase);
 
-    Nodo* nuevo = new Nodo(primerNombre, segundoNombre, apellido, segundoApellido,cedula);
+    Nodo* nuevo = new Nodo(primerNombre, segundoNombre, apellido, segundoApellido, cedula);
     nuevo->correo = correoUnico;
+    nuevo->siguiente = NULL;
 
-    nuevo->siguiente = cabeza;
-    cabeza = nuevo;
+    if (cabeza == NULL) {
+        cabeza = nuevo;
+    } else {
+        Nodo* actual = cabeza;
+        while (actual->siguiente != NULL) {
+            actual = actual->siguiente;
+        }
+        actual->siguiente = nuevo;
+    }
 
     cout << "\nEstudiante agregado exitosamente." << endl;
     system("pause");
@@ -87,18 +101,14 @@ void ListaEstudiantes::agregarEstudiante(const string& primerNombre, const strin
 }
 
 void ListaEstudiantes::mostrarLista() const {
-    // Imprimir cabecera
-    cout << "\n======================================================================================" << endl;
+    cout << "\n=========================================================================================" << endl;
     cout << "                                Registro de Estudiantes  " << endl;
-    cout << "====================================================================================" << endl;
-    
-    // Imprimir encabezados de columnas
+    cout << "=========================================================================================" << endl;
     cout << left << setw(42) << "Nombres y Apellidos" 
-         << setw(20) << "Cedula"  // Ampliar espacio aquí
+         << setw(20) << "Cedula" 
          << setw(30) << "Correo" << endl;
-    
-    cout << "---------------------------------------------------------------------------------------" << endl;
-    
+    cout << "-----------------------------------------------------------------------------------------" << endl;
+
     Nodo* actual = cabeza;
     if (!actual) {
         cout << "La lista esta vacia." << endl;
@@ -109,21 +119,16 @@ void ListaEstudiantes::mostrarLista() const {
 
     while (actual != NULL) {
         string nombreCompleto = actual->primerNombre + " " + actual->segundoNombre + " " + actual->apellido + " " + actual->segundoApellido;
-
-        // Imprimir los datos en formato de columnas
         cout << left << setw(42) << nombreCompleto 
-             << setw(20) << actual->cedula  // Ampliar espacio aquí
+             << setw(20) << actual->cedula 
              << setw(30) << actual->correo << endl;
-
-        // Avanzar al siguiente estudiante
         actual = actual->siguiente;
     }
 
-    cout << "------------------------------------------------------------------------------------------" << endl;
-    system("pause");
-    system("cls");
+    cout << "-----------------------------------------------------------------------------------------" << endl;
+    //system("pause");
+    //system("cls");
 }
-
 
 void ListaEstudiantes::liberarLista() {
     Nodo* actual = cabeza;
@@ -133,5 +138,37 @@ void ListaEstudiantes::liberarLista() {
         actual = siguiente;
     }
     cabeza = NULL;
+}
+
+void ListaEstudiantes::eliminarEstudiante(const string& cedula) {
+    if (cabeza == NULL) {
+        cout << "\nLa lista esta vacia. No se puede eliminar ningun estudiante." << endl;
+        system("pause");
+        system("cls");
+        return;
+    }
+
+    Nodo* actual = cabeza;
+    Nodo* anterior = NULL;
+
+    while (actual != NULL && actual->cedula != cedula) {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (actual == NULL) {
+        cout << "\nNo se encontro ningun estudiante con la cedula: " << cedula << endl;
+    } else {
+        if (anterior == NULL) {
+            cabeza = actual->siguiente;
+        } else {
+            anterior->siguiente = actual->siguiente;
+        }
+        delete actual;
+        cout << "\nEstudiante eliminado exitosamente." << endl;
+    }
+
+    system("pause");
+    system("cls");
 }
 

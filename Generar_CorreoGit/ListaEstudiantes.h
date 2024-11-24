@@ -19,8 +19,13 @@ public:
     ~ListaEstudiantes();
 
     void agregarEstudiante(const string& primerNombre, const string& segundoNombre, const string& apellido, const string& segundoApellido,const string& cedula);
-    void mostrarLista() const;
+    void eliminarEstudiante(const string& cedula);
+	void mostrarLista() const;
     void liberarLista();
+    
+    void guardarEnArchivo(const string& nombreArchivo);
+	void leerDesdeArchivo(const string& nombreArchivo);
+	
 };
 
 #endif

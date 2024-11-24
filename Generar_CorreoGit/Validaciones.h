@@ -10,4 +10,5 @@ string ingresar_string(const char* );
 string ingresar_cedula(const char* );
 
 
+
 #endif 
