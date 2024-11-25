@@ -1,13 +1,24 @@
+#include "ListaEstudiantes.h"
 #include "menu.h"
+#include "ListaEstudiantes.h" 
+#include"Validaciones.h"
+#include "Archivotxt.h"
 #include <iostream>
 #include <conio.h>  // Para _getch()
 #include <windows.h> // Para cambiar colores en la consola
+#include <limits>
+
 
 using namespace std;
 
+
+
 void menu(){
+
+	
+	
 	const int numOpciones = 4;
-    string opciones[numOpciones] = {"Opcion 1", "Opcion 2", "Opcion 3", "Salir"};
+    string opciones[numOpciones] = {"Agregar estudiante", "Mostrar lista de estudiantes", "Eliminar estudiante", "Salir"};
     int opcionSeleccionada = 0; // Inicializamos la opción seleccionada en 0
 
     while (true) {
@@ -42,7 +53,7 @@ void cambiarColor(int color) {
 // Función para mostrar el menú
 void mostrarMenu(int opcionSeleccionada, const string opciones[], int numOpciones) {
     system("cls"); // Limpia la consola
-    cout << "=== Menu ===\n";
+    cout << "=== Generador de Correos Institucionales ===\n";
     for (int i = 0; i < numOpciones; ++i) {
         if (i == opcionSeleccionada) {
             cambiarColor(3); // Cambiar el color de la opción seleccionada (verde)
@@ -57,13 +68,49 @@ void mostrarMenu(int opcionSeleccionada, const string opciones[], int numOpcione
 
 // Función para procesar la selección de una opción
 void procesarSeleccion(const string& opcion) {
-    if (opcion == "Opcion 1") {
-        cout << "Has seleccionado la Opcion 1.\n";
-    } else if (opcion == "Opcion 2") {
-        cout << "Has seleccionado la Opcion 2.\n";
-    } else if (opcion == "Opcion 3") {
-        cout << "Has seleccionado la Opcion 3.\n";
-    } else if (opcion == "Salir") {
+	ListaEstudiantes lista;
+	Archivotxt manejadorArchivos;
+	
+    if (opcion == "Agregar estudiante") {
+    	
+        manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);
+        string primerNombre, segundoNombre, apellido, segundoApellido,cedula;
+        primerNombre=ingresar_string("\n\nIngrese el primer nombe: ");
+        segundoNombre=ingresar_string("Ingrese el segundo nombre: ");
+		apellido=ingresar_string("Ingrese el primer apellido: ");
+		segundoApellido=ingresar_string("Ingrese el segundo apellido: ");
+  		cedula=ingresar_cedula("Ingrese su numero de cedula: ");
+					
+        lista.agregarEstudiante(primerNombre, segundoNombre, apellido, segundoApellido,cedula);
+                
+               
+        //Guarda en el txt
+    	manejadorArchivos.guardarEnArchivo("estudiantes.txt",lista);
+    } 
+    
+	else if (opcion == "Mostrar lista de estudiantes") {
+		
+		
+        manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);
+            	
+        system("cls");
+        lista.mostrarLista();
+        system("pause");
+    	system("cls");
+    
+	}
+	 else if (opcion == "Eliminar estudiante") {
+        manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);
+		lista.mostrarLista();
+			
+		string cedulaEliminar;
+		cedulaEliminar=ingresar_cedula("\nIngrese la cedula del estudiante que desea eliminar: ");
+		lista.eliminarEstudiante(cedulaEliminar);
+		    
+		manejadorArchivos.guardarEnArchivo("estudiantes.txt",lista);
+		    
+    } 
+	else if (opcion == "Salir") {
         cout << "Saliendo del programa...\n";
     } else {
         cout << "Opcion no valida.\n";
