@@ -8,22 +8,35 @@ using namespace std;
 
 
 int ingresar_entero(const char *mensaje) {
-    char num[10];
+    char num[10]; // Buffer para almacenar el nï¿½mero
     char c;
     int i = 0;
+    bool tiene_digito = false; // Bandera para verificar si se ingresï¿½ al menos un dï¿½gito
     int valor;
 
     cout << mensaje;
 
-    while ((c = getch()) != 13) { // Mientras no se presione Enter
-        if (c >= '0' && c <= '9') { // Si es un número
-            if (i < 9) { // Verifica que no exceda el tamaño del buffer
-                cout << c; // Muestra el carácter
+    while (true) {
+        c = getch();
+
+        if (c >= '0' && c <= '9') { // Si es un nï¿½mero
+            if (i < 9) { // Verifica que no exceda el tamaï¿½o del buffer
+                cout << c; // Muestra el carï¿½cter
                 num[i++] = c; // Agrega al arreglo
+                tiene_digito = true; // Marca que se ingresï¿½ al menos un dï¿½gito
             }
         } else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
-            cout << "\b \b"; // Retrocede, borra el carácter en pantalla
-            i--; // Reduce el índice para eliminar el último carácter ingresado
+            cout << "\b \b"; // Retrocede, borra el carï¿½cter en pantalla
+            i--; // Reduce el ï¿½ndice para eliminar el ï¿½ltimo carï¿½cter ingresado
+            if (i == 0) {
+                tiene_digito = false; // Si no quedan caracteres, resetea la bandera
+            }
+        } else if (c == 13) { // Si se presiona Enter
+            if (tiene_digito) { // Permitir Enter solo si se ingresï¿½ al menos un dï¿½gito
+                break;
+            } else {
+                cout << '\a'; // Beep para indicar error
+            }
         }
     }
 
@@ -32,6 +45,7 @@ int ingresar_entero(const char *mensaje) {
 
     return valor;
 }
+
 float ingresar_float(const char* msj) {
     char cad[20]; 
     char c;
@@ -43,17 +57,17 @@ float ingresar_float(const char* msj) {
     while ((c = _getch()) != 13) { // Mientras no se presione Enter (ASCII 13)
         if ((c >= '0' && c <= '9') || (c == '.' && !decimal_point)) {
             if (c == '.') {
-                decimal_point = true; // Marcar que se ingresó un punto decimal
+                decimal_point = true; // Marcar que se ingresï¿½ un punto decimal
             }
-            printf("%c", c);       // Mostrar el carácter ingresado
+            printf("%c", c);       // Mostrar el carï¿½cter ingresado
             cad[i++] = c;         // Guardarlo en el arreglo
         }
         else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
-            i--; // Reduce el índice para eliminar el último carácter ingresado
+            i--; // Reduce el ï¿½ndice para eliminar el ï¿½ltimo carï¿½cter ingresado
             if (cad[i] == '.') {
-                decimal_point = false; // Si se borró un punto decimal, permitir otro
+                decimal_point = false; // Si se borrï¿½ un punto decimal, permitir otro
             }
-            printf("\b \b"); // Retrocede, borra el carácter en pantalla
+            printf("\b \b"); // Retrocede, borra el carï¿½cter en pantalla
         }
     }
 
@@ -65,35 +79,58 @@ float ingresar_float(const char* msj) {
     }
 
     cad[i] = '\0'; // Cerrar la cadena con null terminator
-    printf("\n"); // Salto de línea para mantener formato
+    printf("\n"); // Salto de lï¿½nea para mantener formato
     return atof(cad); 
 }
 string ingresar_string(const char* mensaje) {
     char cadena[100]; // Buffer para la cadena
     char c;
     int i = 0;
+    bool tiene_letra = false; // Bandera para verificar si se ingresï¿½ al menos una letra
 
     cout << mensaje;
 
-    while ((c = _getch()) != 13) { // Mientras no se presione Enter (ASCII 13)
+    while (true) {
+        c = _getch();
+
         if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ') {
-            if (i < 99) { // Verificar que no exceda el tamaño del buffer
-                cout << c; // Muestra el carácter
-                cadena[i++] = c; // Agrega el carácter al arreglo
+            if (i < 99) { // Verificar que no exceda el tamaï¿½o del buffer
+                cout << c; // Muestra el carï¿½cter
+                cadena[i++] = c; // Agrega el carï¿½cter al arreglo
+                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                    tiene_letra = true; // Marca que se ingresï¿½ al menos una letra
+                }
             }
         } else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
-            cout << "\b \b"; // Retrocede, borra el carácter en pantalla
-            i--; // Reduce el índice
+            cout << "\b \b"; // Retrocede y borra el carï¿½cter en pantalla
+            if ((cadena[i - 1] >= 'A' && cadena[i - 1] <= 'Z') || 
+                (cadena[i - 1] >= 'a' && cadena[i - 1] <= 'z')) {
+                tiene_letra = false; // Puede ser necesario revisar si quedan letras
+                for (int j = 0; j < i - 1; j++) {
+                    if ((cadena[j] >= 'A' && cadena[j] <= 'Z') || 
+                        (cadena[j] >= 'a' && cadena[j] <= 'z')) {
+                        tiene_letra = true;
+                        break;
+                    }
+                }
+            }
+            i--; // Reduce el ï¿½ndice
+        } else if (c == 13) { // Si se presiona Enter
+            if (tiene_letra) { // Permitir Enter solo si se ingresï¿½ al menos una letra
+                break;
+            } else {
+                cout << '\a'; // Beep para indicar error
+            }
         }
     }
 
     cadena[i] = '\0'; // Termina la cadena con el null terminator
-    cout << endl; // Salto de línea al finalizar
+    cout << endl; // Salto de lï¿½nea al finalizar
 
     return string(cadena); // Retorna como un objeto de tipo string
 }
 string ingresar_cedula(const char* mensaje) {
-    char cedula[11]; // Buffer para 10 dígitos más el null terminator
+    char cedula[11]; // Buffer para 10 dï¿½gitos mï¿½s el null terminator
     char c;
     int i = 0;
 
@@ -102,16 +139,16 @@ string ingresar_cedula(const char* mensaje) {
     while (true) {
         c = _getch();
 
-        if (c >= '0' && c <= '9') { // Si es un número
-            if (i < 10) { // Permitir hasta 10 dígitos
-                cout << c; // Mostrar el carácter en pantalla
+        if (c >= '0' && c <= '9') { // Si es un nï¿½mero
+            if (i < 10) { // Permitir hasta 10 dï¿½gitos
+                cout << c; // Mostrar el carï¿½cter en pantalla
                 cedula[i++] = c; // Agregar al arreglo
             }
         } else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
-            cout << "\b \b"; // Retrocede y borra el carácter en pantalla
-            i--; // Reduce el índice
+            cout << "\b \b"; // Retrocede y borra el carï¿½cter en pantalla
+            i--; // Reduce el ï¿½ndice
         } else if (c == 13) { // Si se presiona Enter
-            if (i == 10) { // Permitir Enter solo si se ingresaron 10 dígitos
+            if (i == 10) { // Permitir Enter solo si se ingresaron 10 dï¿½gitos
                 break;
             } else {
                 // Emitir un sonido para indicar que no se permite Enter
@@ -121,7 +158,7 @@ string ingresar_cedula(const char* mensaje) {
     }
 
     cedula[i] = '\0'; // Termina la cadena con el null terminator
-    cout << endl; // Salto de línea al finalizar
+    cout << endl; // Salto de lï¿½nea al finalizar
 
     return string(cedula); // Retorna como un objeto string
 }
