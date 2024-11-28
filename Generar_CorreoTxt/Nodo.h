@@ -14,7 +14,7 @@ public:
     string cedula;
     Nodo* siguiente;
 
-    Nodo(const string& pNombre, const string& sNombre, const string& ape, const string& sApe,const string& _cedula);
+    Nodo(const string& pNombre, const string& sNombre, const string& ape, const string& sApe,const string& _cedula,const string& _correo);
 };
 
 #endif

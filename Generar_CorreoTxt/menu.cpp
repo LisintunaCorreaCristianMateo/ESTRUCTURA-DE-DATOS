@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "CifradoCesar.h"
 #include <iostream>
 #include <conio.h>  // Para _getch()
 #include <windows.h> // Para cambiar colores en la consola
@@ -64,12 +65,36 @@ void mostrarMenu(int opcionSeleccionada, const string opciones[], int numOpcione
 void procesarSeleccion(const string& opcion) {
     if (opcion == "Agregar estudiante") {
         manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);
+        
         string primerNombre, segundoNombre, apellido, segundoApellido,cedula;
-        primerNombre=ingresar_string("\n\nIngrese el primer nombe: ");
+        primerNombre=ingresar_string("\n\nIngrese el primer nombre: ");
         segundoNombre=ingresar_string("Ingrese el segundo nombre: ");
 		apellido=ingresar_string("Ingrese el primer apellido: ");
 		segundoApellido=ingresar_string("Ingrese el segundo apellido: ");
-  		cedula=ingresar_cedula("Ingrese su numero de cedula: ");
+		cedula=ingresar_cedula("Ingrese su numero de cedula: ");
+				
+		bool cedula_existente = true;
+		
+		while (cedula_existente) {
+			
+		    cedula_existente = false;  // Asumimos que la cédula no existe inicialmente
+		    
+		    Nodo* temp = lista.getCabeza();  // Reiniciamos la búsqueda desde el primer nodo
+		    while (temp != NULL) {
+		    	//tenemos que descifrar la cedula para poder comparar con la ingresada
+		    		string cedulaDecifrada=descifrarCesar(temp->cedula);
+		    	
+		        if (cedulaDecifrada == cedula) {
+		            cout<<endl;
+		            cedula = ingresar_cedula("La cedula ya existe, vulve a ingresar: ");  // Solicita una nueva cédula
+		            cedula_existente = true;  // Marcamos que la cédula ya existe
+		            break;  // Salimos del ciclo interno y volvemos a verificar con la nueva cédula
+		        }
+		        temp = temp->siguiente;  // Avanzamos al siguiente nodo
+		    }
+		}
+
+		
 					
         lista.agregarEstudiante(primerNombre, segundoNombre, apellido, segundoApellido,cedula);
                 
@@ -83,8 +108,8 @@ void procesarSeleccion(const string& opcion) {
             	
         system("cls");
         lista.mostrarLista();
-        system("pause");
-    	system("cls");
+    
+  		system("pause");
     }
 	else if (opcion == "Eliminar estudiante") {
         manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);

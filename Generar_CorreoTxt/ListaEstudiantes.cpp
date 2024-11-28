@@ -1,5 +1,6 @@
 #include "ListaEstudiantes.h"
 #include "Archivotxt.h" // Incluimos la nueva clase Archivos
+#include "CifradoCesar.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -16,7 +17,7 @@ ListaEstudiantes::~ListaEstudiantes() {
 }
 
 // Métodos de manipulación de cadenas
-string ListaEstudiantes::convertirMinusculas(const string& cadena) {
+string ListaEstudiantes::convertirMinusculas( string& cadena) {
     string resultado = cadena;
     for (size_t i = 0; i < cadena.length(); ++i) {
         resultado[i] = tolower(cadena[i]);
@@ -30,7 +31,7 @@ string ListaEstudiantes::convertirAString(int numero) {
     return ss.str();
 }
 
-string ListaEstudiantes::eliminarEspacios(const string& cadena) {
+string ListaEstudiantes::eliminarEspacios( string& cadena) {
     string resultado;
     for (size_t i = 0; i < cadena.length(); ++i) {
         if (cadena[i] != ' ') {
@@ -40,8 +41,10 @@ string ListaEstudiantes::eliminarEspacios(const string& cadena) {
     return resultado;
 }
 
+
+
 // Métodos relacionados con generación de correos
-string ListaEstudiantes::generarCorreoBase(const string& primerNombre, const string& segundoNombre, const string& apellido) {
+string ListaEstudiantes::generarCorreoBase( string& primerNombre, string& segundoNombre, string& apellido) {
     char inicial1 = tolower(primerNombre[0]);
     char inicial2 = tolower(segundoNombre[0]);
     string apellidoSinEspacios = eliminarEspacios(apellido);
@@ -50,7 +53,8 @@ string ListaEstudiantes::generarCorreoBase(const string& primerNombre, const str
     return string(1, inicial1) + string(1, inicial2) + apellidoMinuscula;
 }
 
-string ListaEstudiantes::generarCorreoUnico(const string& baseCorreo) {
+
+string ListaEstudiantes::generarCorreoUnico( string& baseCorreo) {
     string correoUnico = baseCorreo + "@espe.edu.ec";
     int contador = 1;
 
@@ -60,7 +64,11 @@ string ListaEstudiantes::generarCorreoUnico(const string& baseCorreo) {
         Nodo* actual = cabeza;
 
         while (actual != NULL) {
-            if (actual->correo == correoUnico) {
+        	//actual->correo esta cifrado, debemos decifrar para poder comparar
+        	string correoDecifrado;
+        	correoDecifrado=descifrarCesar(actual->correo);
+        	
+            if (correoDecifrado == correoUnico) {
                 existe = true;
                 break;
             }
@@ -77,12 +85,29 @@ string ListaEstudiantes::generarCorreoUnico(const string& baseCorreo) {
 }
 
 // Métodos de manejo de la lista enlazada
-void ListaEstudiantes::agregarEstudiante(const string& primerNombre, const string& segundoNombre, const string& apellido, const string& segundoApellido, const string& cedula) {
+void ListaEstudiantes::agregarEstudiante( string& primerNombre, string& segundoNombre,  string& apellido,  string& segundoApellido,  string& cedula) {
+	    // Limpiar espacios en los nombres
+
+	
     string correoBase = generarCorreoBase(primerNombre, segundoNombre, apellido);
     string correoUnico = generarCorreoUnico(correoBase);
+    
+    string correo;
+	correo=correoUnico;
 
-    Nodo* nuevo = new Nodo(primerNombre, segundoNombre, apellido, segundoApellido, cedula);
-    nuevo->correo = correoUnico;
+	            // Cifrar datos antes de ingresar a la lista
+            string nombreCifrado = cifrarCesar(primerNombre);
+            string segundoNombreCifrado = cifrarCesar(segundoNombre);
+            string apellidoCifrado = cifrarCesar(apellido);
+            string segundoApellidoCifrado = cifrarCesar(segundoApellido);
+            string cedulaCifrado = cifrarCesar(cedula);
+            string correoCifrado = cifrarCesar(correo);
+	
+
+
+    Nodo* nuevo = new Nodo(nombreCifrado, segundoNombreCifrado,apellidoCifrado, segundoApellidoCifrado, cedulaCifrado,correoCifrado);
+    
+    
     nuevo->siguiente = NULL;
 
     if (cabeza == NULL) {
@@ -100,34 +125,100 @@ void ListaEstudiantes::agregarEstudiante(const string& primerNombre, const strin
     system("cls");
 }
 
-void ListaEstudiantes::mostrarLista() const {
-    cout << "\n=========================================================================================" << endl;
-    cout << "                                Registro de Estudiantes  " << endl;
-    cout << "=========================================================================================" << endl;
-    cout << left << setw(42) << "Nombres y Apellidos" 
-         << setw(20) << "Cedula" 
+void ListaEstudiantes::mostrarListaDescifrada() {
+    cout << "\n=========================================================================================================" << endl;
+    cout << "                                Registro de Estudiantes Descifrado " << endl;
+    cout << "=========================================================================================================" << endl;
+    cout << left << setw(62) << "Nombres y Apellidos" 
+         << setw(25) << "Cedula" 
          << setw(30) << "Correo" << endl;
-    cout << "-----------------------------------------------------------------------------------------" << endl;
+    cout << "---------------------------------------------------------------------------------------------------------" << endl; 
+
+    Nodo* temp = cabeza;
+    
+    if (!temp) {
+        cout << "La lista esta vacia." << endl;
+        return;
+    }
+
+    while (temp != NULL) {
+        // Descifrar los datos del nodo actual
+        string primerNombreDescifrado = descifrarCesar(temp->primerNombre);
+        string segundoNombreDescifrado = descifrarCesar(temp->segundoNombre);
+        string apellidoDescifrado = descifrarCesar(temp->apellido);
+        string segundoApellidoDescifrado = descifrarCesar(temp->segundoApellido);
+        string cedulaDescifrado = descifrarCesar(temp->cedula);
+        string correoDescifrado = descifrarCesar(temp->correo);
+
+		string nombreCompletoDescifrado = primerNombreDescifrado + " " + segundoNombreDescifrado + " " + apellidoDescifrado + " " + segundoApellidoDescifrado;
+
+        // Imprimir datos descifrados
+        cout << left 
+             << setw(60) << nombreCompletoDescifrado
+             << setw(20) << cedulaDescifrado
+             << setw(30) << correoDescifrado << endl;
+
+        // Avanzar al siguiente nodo
+        temp = temp->siguiente;
+    }
+
+    cout << "---------------------------------------------------------------------------------------------------------" << endl;
+}
+
+
+
+void ListaEstudiantes::mostrarLista() {
+    cout << "\n=========================================================================================================" << endl;
+    cout << "                                Registro de Estudiantes  " << endl;
+    cout << "=========================================================================================================" << endl;
+    cout << left << setw(62) << "Nombres y Apellidos" 
+         << setw(25) << "Cedula" 
+         << setw(30) << "Correo" << endl;
+    cout << "--------------------------------------------------------------------------------------------------------" << endl;
 
     Nodo* actual = cabeza;
     if (!actual) {
         cout << "La lista esta vacia." << endl;
-        system("pause");
-        system("cls");
+        
         return;
     }
 
     while (actual != NULL) {
-        string nombreCompleto = actual->primerNombre + " " + actual->segundoNombre + " " + actual->apellido + " " + actual->segundoApellido;
-        cout << left << setw(42) << nombreCompleto 
+    	
+
+    	
+    	string nombrecompleto;
+    		
+    		string nombreCompleto = actual->primerNombre + " " + actual->segundoNombre + " " + actual->apellido + " " + actual->segundoApellido;
+        
+        cout << left 
+			 << setw(60) <<nombreCompleto
+			 << setw(20)
+			 << setw(20)
              << setw(20) << actual->cedula 
              << setw(30) << actual->correo << endl;
         actual = actual->siguiente;
     }
 
-    cout << "-----------------------------------------------------------------------------------------" << endl;
-    //system("pause");
-    //system("cls");
+    cout << "---------------------------------------------------------------------------------------------------------" << endl;
+ 	
+ 	
+ 	///////////////Impresion de datos decifrados
+ 	string clavecorrecta= "miclave";
+ 	string clave;
+ 	
+ 	cout<<endl;
+ 	
+    cout << "Ingrese la clave para descifrar: ";
+    getline(cin, clave);
+ 	cout<<endl; 
+ 	
+ 	while(clave!=clavecorrecta){
+ 		 	cout<<"Clave incorrecta, vuelve a ingresar: ";
+ 			getline(cin, clave);
+	 }
+	 mostrarListaDescifrada();  
+    
 }
 
 void ListaEstudiantes::liberarLista() {
@@ -140,18 +231,23 @@ void ListaEstudiantes::liberarLista() {
     cabeza = NULL;
 }
 
-void ListaEstudiantes::eliminarEstudiante(const string& cedula) {
+void ListaEstudiantes::eliminarEstudiante( string& cedula) {
     if (cabeza == NULL) {
         cout << "\nLa lista esta vacia. No se puede eliminar ningun estudiante." << endl;
         system("pause");
         system("cls");
         return;
     }
+    //la cedula esta guardada como cifrada
+    //entonces a la cedula que nos proporcionan hay que cifrarle para poder eliminar
+    
+    string cedulaCifrada=cifrarCesar(cedula);
+    
 
     Nodo* actual = cabeza;
     Nodo* anterior = NULL;
 
-    while (actual != NULL && actual->cedula != cedula) {
+    while (actual != NULL && actual->cedula != cedulaCifrada) {
         anterior = actual;
         actual = actual->siguiente;
     }
@@ -171,4 +267,5 @@ void ListaEstudiantes::eliminarEstudiante(const string& cedula) {
     system("pause");
     system("cls");
 }
+
 

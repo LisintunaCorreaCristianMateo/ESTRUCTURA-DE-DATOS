@@ -1,7 +1,10 @@
 #include "Archivotxt.h"
+#include "CifradoCesar.h"
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+
 
 using namespace std;
 
@@ -17,32 +20,24 @@ void Archivotxt::leerDesdeArchivo(const string& nombreArchivo, ListaEstudiantes&
 
     string linea;
     while (getline(archivo, linea)) {
-        // Verificar si la línea tiene la longitud suficiente antes de continuar
-        if (linea.length() < 90) {  // Longitud esperada según los datos
+        istringstream flujo(linea);
+        string primerNombre, segundoNombre, apellido, segundoApellido, cedula, correo;
+
+        // Usar getline con delimitador de coma para extraer cada campo
+        if (!getline(flujo, primerNombre, ',') ||
+            !getline(flujo, segundoNombre, ',') ||
+            !getline(flujo, apellido, ',') ||
+            !getline(flujo, segundoApellido, ',') ||
+            !getline(flujo, cedula, ',') ||
+            !getline(flujo, correo, ',')) {
             cout << "Línea con formato incorrecto: " << linea << endl;
             continue;
         }
 
-        // Extraer campos con las posiciones y anchos establecidos
-        string primerNombre = linea.substr(0, 15);
-        string segundoNombre = linea.substr(15, 15);
-        string apellido = linea.substr(30, 15);
-        string segundoApellido = linea.substr(45, 15);
-        string cedula = linea.substr(60, 15);
-        string correo = linea.substr(75, 30);
+        // Crear un nodo con los datos leídos
+        Nodo* nuevo = new Nodo(primerNombre, segundoNombre, apellido, segundoApellido, cedula, correo);
 
-        // Eliminar espacios sobrantes en los campos
-        primerNombre = lista.eliminarEspacios(primerNombre);
-        segundoNombre = lista.eliminarEspacios(segundoNombre);
-        apellido = lista.eliminarEspacios(apellido);
-        segundoApellido = lista.eliminarEspacios(segundoApellido);
-        cedula = lista.eliminarEspacios(cedula);
-        correo = lista.eliminarEspacios(correo);
-
-        // Agregar el estudiante a la lista
-        Nodo* nuevo = new Nodo(primerNombre, segundoNombre, apellido, segundoApellido, cedula);
-        nuevo->correo = correo;
-
+        // Agregar el nodo a la lista
         if (lista.getCabeza() == NULL) {
             lista.setCabeza(nuevo);
         } else {
@@ -55,8 +50,10 @@ void Archivotxt::leerDesdeArchivo(const string& nombreArchivo, ListaEstudiantes&
     }
 
     archivo.close(); // Cerrar el archivo
-   // cout << "Datos cargados desde el archivo: " << nombreArchivo << endl;
+    cout << "Datos cargados desde el archivo: " << nombreArchivo << endl;
 }
+
+
 
 void Archivotxt::guardarEnArchivo(const string& nombreArchivo, const ListaEstudiantes& lista) {
     ofstream archivo(nombreArchivo.c_str(), ios::out | ios::trunc); // Abrir archivo para escritura
@@ -74,13 +71,15 @@ void Archivotxt::guardarEnArchivo(const string& nombreArchivo, const ListaEstudi
     }
 
     while (actual != NULL) {
-        archivo << left << setw(15) << actual->primerNombre
-                << setw(15) << actual->segundoNombre
-                << setw(15) << actual->apellido
-                << setw(15) << actual->segundoApellido
-                << setw(15) << actual->cedula
-                << setw(30) << actual->correo << endl;
+        // Escribir los datos separados por comas
+        archivo << actual->primerNombre << ","
+                << actual->segundoNombre << ","
+                << actual->apellido << ","
+                << actual->segundoApellido << ","
+                << actual->cedula << ","
+                << actual->correo << endl;
 
+        // Verificar si ocurrió un error al escribir
         if (!archivo) {
             cout << "Error al escribir en el archivo." << endl;
             archivo.close();
@@ -93,4 +92,7 @@ void Archivotxt::guardarEnArchivo(const string& nombreArchivo, const ListaEstudi
     archivo.close();
     cout << "Datos guardados en el archivo: " << nombreArchivo << endl;
 }
+
+
+
 

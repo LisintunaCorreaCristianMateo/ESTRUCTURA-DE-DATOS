@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Nodo.h"
+#include <iostream>
 using namespace std;
 
 class ListaEstudiantes {
@@ -19,16 +20,20 @@ public:
     //Metodo auxiliares
     void liberarLista();
     
-    string eliminarEspacios(const string& cadena);
-    string convertirMinusculas(const string& cadena);
+    string eliminarEspacios( string& cadena);
+    string convertirMinusculas(string& cadena);
     string convertirAString(int numero);
-    string generarCorreoBase(const string& primerNombre, const string& segundoNombre, const string& apellido);
-    string generarCorreoUnico(const string& baseCorreo);
+    string generarCorreoBase( string& primerNombre, string& segundoNombre,  string& apellido);
+    string generarCorreoUnico( string& baseCorreo);
     
      // Métodos para trabajar con la lista
-	void eliminarEstudiante(const string& cedula);
-    void agregarEstudiante(const string& primerNombre, const string& segundoNombre, const string& apellido, const string& segundoApellido,const string& cedula);
-	void mostrarLista() const;
+	void eliminarEstudiante( string& cedula);
+    void agregarEstudiante(string& primerNombre,  string& segundoNombre, string& apellido, string& segundoApellido,string& cedula);
+	void mostrarLista() ;
+	void mostrarListaDescifrada();
+	
+	
+	
     
     
         // Métodos para manejar la cabeza de la lista
