@@ -207,8 +207,7 @@ void ListaCircularDoble::ingresarVehiculo(string placa, string cedula, string no
 
     //Guardar copia de los datos en el historial
     historial.ingresarVehiculo(puestoSeleccionado->getPuesto() ,placa,cedula,nombre,segundoNombre,apellido,segundoApellido,fecha,horaIngreso);
-    
-    //historial.leerHistorial();
+
     manejadorArchivosHistorial2.guardarHistorial(historial);
     // Confirmaci�n de ingreso
     cout << "Vehiculo con placa " << placa << " ingresado en el puesto " << puestoSeleccionado->getPuesto() << "." << endl;
@@ -219,14 +218,27 @@ void ListaCircularDoble::ingresarVehiculo(string placa, string cedula, string no
     // Funci�n para eliminar un veh�culo
 void ListaCircularDoble::retirarVehiculo(int puesto) {
     Nodo* actual = cabezaIzquierda;
-
+	string placa;
+    
     do {
         if (actual->getPuesto() == puesto) {
             if (actual->isOcupado()) {
                 cout << "Vehiculo con placa " << actual->getPlaca() 
                      << " retirado del puesto " << puesto << "." << endl;
+
+                //extraer placa
+                placa=actual->getPlaca();
+                
+               
+                
+                historial.existeVehiculo(placa,obtenerHoraActual());
+                manejadorArchivosHistorial2.guardarHistorial(historial);
+                //cout<<"\nLa placa que fue enviada a comparar es : "<<placa<<"A las : "<<obtenerHoraActual()<<endl;
+
                 actual->setOcupado(false);
                 actual->setPlaca(string(""));
+
+
             } else {
                 cout << "El puesto " << puesto << " esta� libre." << endl;
             }
@@ -241,6 +253,14 @@ void ListaCircularDoble::retirarVehiculo(int puesto) {
             if (actual->isOcupado()) {
                 cout << "Vehiculo con placa " << actual->getPlaca() 
                      << " retirado del puesto " << puesto << "." << endl;
+
+                //extraer placa
+                placa=actual->getPlaca();
+                
+                manejadorArchivosHistorial2.leerHistorial(historial);
+                historial.existeVehiculo(placa,obtenerHoraActual());
+                 manejadorArchivosHistorial2.guardarHistorial(historial);
+
                 actual->setOcupado(false);
                 actual->setPlaca("");
             } else {
@@ -250,8 +270,10 @@ void ListaCircularDoble::retirarVehiculo(int puesto) {
         }
         actual = actual->getSiguiente();
     } while (actual != cabezaDerecha);
-
+    
     cout << "El puesto " << puesto << " no existe." << endl;
+
+    
 }
 // metodos para la impresion
 

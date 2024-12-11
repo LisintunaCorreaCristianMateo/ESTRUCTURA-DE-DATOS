@@ -1,2 +1,2 @@
-Cristian,Mateo,Lisintuna,Correa,1726403999,18,TRE1472,09/12/2024,07:53:22,parqueado
-Brayan,Patricio,Gualotuna,Gomez,1725914236,15,IYE8795,09/12/2024,07:54:22,parqueado
+Transito,Amelia,Lisintuna,ilva,1726403999,12,KSF1452,11/12/2024,05:02:02,05:03:41
+Luis,Andres,Garcia,riones,1726403999,14,QEF4477,11/12/2024,05:03:21,parqueado

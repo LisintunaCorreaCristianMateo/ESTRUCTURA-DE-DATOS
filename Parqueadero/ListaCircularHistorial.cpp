@@ -13,18 +13,19 @@ ListaCircularHistorial::~ListaCircularHistorial(){
 
 }
 
+
 void ListaCircularHistorial::ingresarVehiculo(int puesto, string placa, string cedula, string nombre, 
                                               string nombre2, string apellido, string apellido2, 
                                               string fecha, string horaIngreso) {
     // Crear un nuevo nodo con los datos del historial
-    Historial* nuevo = new Historial(puesto, placa, cedula, nombre, nombre2, apellido, apellido2, fecha, horaIngreso);
+    Historial* nuevo = new Historial(puesto, placa, cedula, nombre, nombre2, apellido, apellido2, fecha, horaIngreso,"parqueado");
 
     // Caso: la lista está vacía
     if (!cabeza) {
         cabeza = nuevo;
         nuevo->setSiguiente(nuevo); // Apunta a sí mismo
         nuevo->setAnterior(nuevo); // Apunta a sí mismo
-        cout << "Clase historial >> Vehículo ingresado en el puesto " << nuevo->getPuesto() << ". La lista estaba vacía.\n";
+        //cout << "Clase historial >> Vehículo ingresado en el puesto " << nuevo->getPuesto() << ". La lista estaba vacía.\n";
         return;
     }
 
@@ -53,7 +54,7 @@ void ListaCircularHistorial::mostrarHistorial() {
     cout << left 
          << setw(10) << "Puesto" 
          << setw(15) << "Placa" 
-         << setw(15) << "Cédula" 
+         << setw(15) << "Cedula" 
          << setw(15) << "Nombre" 
          << setw(15) << "Nombre 2" 
          << setw(15) << "Apellido" 
@@ -62,7 +63,7 @@ void ListaCircularHistorial::mostrarHistorial() {
          << setw(20) << "Hora Ingreso" 
          << setw(20) << "Hora Salida" << endl;
          
-    cout << string(160, '-') << endl; // Separador para mayor claridad
+    cout << string(152, '-') << endl; // Separador para mayor claridad
 
     Historial* actual = cabeza;
     bool historialEncontrado = false;
@@ -91,7 +92,51 @@ void ListaCircularHistorial::mostrarHistorial() {
     cout << endl;
 }
 
+void ListaCircularHistorial::existeVehiculo(string placa, string hora) {
+    
+    if (!cabeza) { // Verifica si la lista está vacía
+        cout << "Lista historial vacia." << endl;
+        return;
+    }
+
+    Historial* actual = cabeza;
+    bool encontrado = false;
+
+    do {
+        cout << "Revisando placa: " << actual->getPlaca() << endl;
+        if (actual->getPlaca() == placa) {
+            cout << "Placa encontrada: " << actual->getPlaca() << endl;
+            actual->setHoraSalida(hora); // Actualiza la hora de salida
+            cout<<"La hora de salida acutalizada es :"<<actual->gethoraSalida();
+            encontrado = true;
+            break;
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabeza);
+
+    if (!encontrado) {
+        cout << "La placa " << placa << " no fue encontrada en el historial." << endl;
+    }
+}
+void ListaCircularHistorial::agregarAlFinal(Historial* nuevo) {
+    Historial* cabeza = getCabeza();
+
+    if (!cabeza) {
+        // Si la lista está vacía, el nuevo nodo será la cabeza
+        setCabeza(nuevo);
+        nuevo->setSiguiente(nuevo); // Apuntando al mismo nodo (circularidad)
+        nuevo->setAnterior(nuevo);
+    } else {
+        // Si no está vacía, insertar el nodo al final
+        Historial* ultimo = cabeza->getAnterior(); // Nodo anterior a la cabeza
+
+        // Actualizar los punteros
+        ultimo->setSiguiente(nuevo);
+        nuevo->setAnterior(ultimo);
+        nuevo->setSiguiente(cabeza);
+        cabeza->setAnterior(nuevo);
+    }
+}
 
                     
-
 

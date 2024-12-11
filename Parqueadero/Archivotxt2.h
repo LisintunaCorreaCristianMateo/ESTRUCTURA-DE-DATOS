@@ -12,7 +12,8 @@ public:
     // M�todos
     void guardarHistorial(ListaCircularHistorial &hist);
     void leerHistorial(ListaCircularHistorial &hist);
-    void limpiarLista(ListaCircularHistorial& hist);
+    
+    
 };
 
 #endif

@@ -74,57 +74,57 @@ void mostrarMenu(int opcionSeleccionada, const string opciones[], int numOpcione
     }
 }
 
-// Declaración e implementación de validarCedulaEcuatoriana
+// Declaraciï¿½n e implementaciï¿½n de validarCedulaEcuatoriana
 bool validarCedulaEcuatoriana(const std::string& cedula) {
     // Verificar que la longitud sea exactamente 10
     if (cedula.length() != 10) return false;
 
-    // Verificar que los primeros dos dígitos (código de provincia) estén en el rango 01-24
+    // Verificar que los primeros dos dï¿½gitos (cï¿½digo de provincia) estï¿½n en el rango 01-24
     int provincia = stoi(cedula.substr(0, 2));
     if (provincia < 1 || provincia > 24) return false;
 
-    // Algoritmo de validación del dígito verificador
+    // Algoritmo de validaciï¿½n del dï¿½gito verificador
     int suma = 0;
     for (int i = 0; i < 9; ++i) {
         int num = cedula[i] - '0';
-        if (i % 2 == 0) { // Si el índice es par
+        if (i % 2 == 0) { // Si el ï¿½ndice es par
             num *= 2;
             if (num > 9) num -= 9;
         }
         suma += num;
     }
 
-    // Cálculo del dígito verificador
+    // Cï¿½lculo del dï¿½gito verificador
     int digitoVerificador = (10 - (suma % 10)) % 10;
 
-    // Comparar con el último dígito de la cédula
+    // Comparar con el ï¿½ltimo dï¿½gito de la cï¿½dula
     return (cedula[9] - '0') == digitoVerificador;
 }
 
-// Función ingresar_cedula que usa validarCedulaEcuatoriana
+// Funciï¿½n ingresar_cedula que usa validarCedulaEcuatoriana
 string ingresar_cedula(const char* mensaje) {
-    char cedula[11]; // Buffer para 10 dígitos más el null terminator
+    char cedula[11]; // Buffer para 10 dï¿½gitos mï¿½s el null terminator
     char c;
     int i = 0;
 
     while (true) {
-        i = 0; // Reiniciar índice
+        i = 0; // Reiniciar ï¿½ndice
         cout << mensaje;
 
-        // Capturar los 10 dígitos de la cédula
+        // Capturar los 10 dï¿½gitos de la cï¿½dula
         while (true) {
             c = _getch();
 
-            if (c >= '0' && c <= '9') { // Si es un número
-                if (i < 10) { // Permitir hasta 10 dígitos
-                    cout << c; // Mostrar el carácter en pantalla
+            if (c >= '0' && c <= '9') { // Si es un nï¿½mero
+                if (i < 10) { // Permitir hasta 10 dï¿½gitos
+                    cout << c; // Mostrar el carï¿½cter en pantalla
                     cedula[i++] = c; // Agregar al arreglo
                 }
             } else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
-                cout << "\b \b"; // Retrocede y borra el carácter en pantalla
-                i--; // Reduce el índice
+                cout << "\b \b"; // Retrocede y borra el carï¿½cter en pantalla
+                i--; // Reduce el ï¿½ndice
             } else if (c == 13) { // Si se presiona Enter
-                if (i == 10) { // Permitir Enter solo si se ingresaron 10 dígitos
+                if (i == 10) { // Permitir Enter solo si se ingresaron 10 dï¿½gitos
                     break;
                 } else {
                     // Emitir un sonido para indicar que no se permite Enter
@@ -134,13 +134,13 @@ string ingresar_cedula(const char* mensaje) {
         }
 
         cedula[i] = '\0'; // Termina la cadena con el null terminator
-        cout << endl; // Salto de línea al finalizar
+        cout << endl; // Salto de lï¿½nea al finalizar
 
-        // Validar la cédula ecuatoriana
+        // Validar la cï¿½dula ecuatoriana
         if (validarCedulaEcuatoriana(cedula)) {
-            return string(cedula); // Si la cédula es válida, retornarla
+            return string(cedula); // Si la cï¿½dula es vï¿½lida, retornarla
         } else {
-            cout << "Cédula inválida. Por favor, intente nuevamente.\n";
+            cout << "Cï¿½dula invï¿½lida. Por favor, intente nuevamente.\n";
         }
     }
 }
@@ -153,7 +153,7 @@ string validarPlaca() {
 
         // Verificar longitud
         if (placa.length() != 7) {
-            cout << "Placa inválida. Debe tener exactamente 7 caracteres.\n";
+            cout << "Placa invï¿½lida. Debe tener exactamente 7 caracteres.\n";
             continue;
         }
 
@@ -161,34 +161,61 @@ string validarPlaca() {
         char primeraLetra = placa[0];
         string letrasPermitidas = "ABUCOEXHOWGILRMVNSPKQTZY";
         if (letrasPermitidas.find(primeraLetra) == string::npos) {
-            cout << "Placa inválida. La primera letra debe ser una de las siguientes: "
+            cout << "Placa invï¿½lida. La primera letra debe ser una de las siguientes: "
                  << "A, B, U, C, X, H, O, E, W, G, I, L, R, M, V, N, S, P, K, Q, T, Z, Y.\n";
             continue;
         }
 
-        // Validar formato: 3 letras seguidas de 4 números
+        // Validar formato: 3 letras seguidas de 4 nï¿½meros
         bool valido = true;
         for (int i = 0; i < 3; i++) {
-            if (!isalpha(placa[i]) || !isupper(placa[i])) { // Las primeras 3 deben ser letras mayúsculas
+            if (!isalpha(placa[i]) || !isupper(placa[i])) { // Las primeras 3 deben ser letras mayï¿½sculas
                 valido = false;
                 break;
             }
         }
         for (int i = 3; i < 7; i++) {
-            if (!isdigit(placa[i])) { // Las siguientes 4 deben ser números
+            if (!isdigit(placa[i])) { // Las siguientes 4 deben ser nï¿½meros
                 valido = false;
                 break;
             }
         }
 
         if (valido) {
-            break; // Placa válida, salir del bucle
+            break; // Placa vï¿½lida, salir del bucle
         } else {
-            cout << "Placa inválida. Debe tener 3 letras mayúsculas seguidas de 4 números (ejemplo: ABC1234).\n";
+            cout << "Placa invï¿½lida. Debe tener 3 letras mayï¿½sculas seguidas de 4 nï¿½meros (ejemplo: ABC1234).\n";
         }
     }
     return placa;
 }
+
+
+bool ListaCircularDoble::existePlaca(const string& placa) {
+    Nodo* actual = cabezaIzquierda;
+
+    // Verificar en la fila izquierda
+    do {
+        if (actual->getPlaca() == placa) {
+            return true; // Placa encontrada
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabezaIzquierda);
+
+    // Verificar en la fila derecha
+    actual = cabezaDerecha;
+    do {
+        if (actual->getPlaca() == placa) {
+            return true; // Placa encontrada
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabezaDerecha);
+
+    return false; // Placa no encontrada
+}
+
+
+
 
 string ingresar_string(const char* mensaje) {
     char cadena[100]; // Buffer para la cadena
@@ -238,14 +265,15 @@ string ingresar_string(const char* mensaje) {
     return string(cadena); // Retorna como un objeto de tipo string
 }
 
+
 // Funciï¿½n para procesar la selecciï¿½n de una opciï¿½n
 void procesarSeleccion(const string& opcion) {
 
             //metodos para la lectura txt
             manejadorArchivos.leerPlacas(parqueadero);
             manejadorArchivos.leerDatos(parqueadero);
-           manejadorArchivosHistorial.leerHistorial(Historial);
-            
+           
+            manejadorArchivosHistorial.leerHistorial(Historial);
 
 	
     if (opcion == "Ver parqueadero") {
@@ -262,36 +290,60 @@ void procesarSeleccion(const string& opcion) {
 	else if (opcion == "Ingresar vehiculo") {
 		
 			
+         while (true) {
+            string placa = validarPlaca();
 
-
-			string placa = validarPlaca();
-
-            string cedula = ingresar_cedula("Ingrese la cedula (10 dï¿½gitos): ");
+             // Validar que la placa no exista en el parqueadero
+             if (parqueadero.existePlaca(placa)) {
+            cout << "La placa " << placa << " ya estÃ¡ registrada en el parqueadero. Intente con otra.\n";
+            }
+             else {
             
-            string nombre = ingresar_string("Ingrese Primer Nombre: ");
+                string cedula = ingresar_cedula("Ingrese la cedula (10 dï¿½gitos): ");
+                string nombre = ingresar_string("Ingrese Primer Nombre: ");
+                 // Hacer el segundo nombre opcional
+            cout << "Ingrese Segundo Nombre (opcional, presione Enter para omitir): ";
+            cin.ignore(); // Limpiar el buffer de entrada
+            string nombre2;
+            getline(cin, nombre2); // Leer lï¿½nea completa
+            if (nombre2.empty()) {
+                nombre2 = ""; // Si estï¿½ vacï¿½o, asignar un valor en blanco
+            }
             
-            string nombre2 = ingresar_string("Ingrese Segundo Nombre: ");
-            
-            string apellido = ingresar_string("Ingrese Primer Apellido: ");
+                string apellido = ingresar_string("Ingrese Primer Apellido: ");
+                // Hacer el segundo apellido opcional
+            cout << "Ingrese Segundo Apellido (opcional, presione Enter para omitir): ";
+            cin.ignore(); // Limpiar el buffer de entrada
+            string apellido2;
+            getline(cin, apellido2); // Leer lï¿½nea completa
+            if (apellido2.empty()) {
+                apellido2 = ""; // Si estï¿½ vacï¿½o, asignar un valor en blanco
+            }
+                
+                
+                parqueadero.ingresarVehiculo(placa,cedula,nombre,nombre2,apellido,apellido2);
 
-            string apellido2 = ingresar_string("Ingrese Segundo Apellido: ");
+            
+        		manejadorArchivos.guardarDatos(parqueadero);
+        		manejadorArchivos.guardarPlacas(parqueadero);
+                break; // Salir del bucle una vez que se haya ingresado el vehÃ­culo
+             }
+
+            
      
-           parqueadero.ingresarVehiculo(placa,cedula,nombre,nombre2,apellido,apellido2);
-           // Historial.ingresarVehiculo(placa,cedula,nombre,nombre2,apellido,apellido2)
-            //metodos de txt para guardar en el txt
-            
-        	manejadorArchivos.guardarDatos(parqueadero);
-        	manejadorArchivos.guardarPlacas(parqueadero);
-            //manejadorArchivos.guardarHistorial(parqueadero);
+          
+   
         
+	
+        }
+        	
+    }
 
 
-        system("pause");
-    	system("cls");
-    
-	}
+
+
 	 else if (opcion == "Retirar vehiculo") {
-
+        
 	 	 int puesto;
         //manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);
 	        cout << "Ingrese el numero del puesto a liberar: ";
@@ -301,6 +353,7 @@ void procesarSeleccion(const string& opcion) {
         	manejadorArchivos.guardarDatos(parqueadero);
         	manejadorArchivos.guardarPlacas(parqueadero);
             //manejadorArchivos.guardarHistorial(parqueadero);
+            
     }
     else if(opcion =="Ver Datos"){
 

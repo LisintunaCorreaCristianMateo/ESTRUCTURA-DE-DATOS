@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Historial::Historial(int _puesto, string _placa,string _cedula,string _nombre,string _segundoNombre, string _apellido, string _segundoApellido,string _fecha,string _horaIngreso){
+Historial::Historial(int _puesto, string _placa,string _cedula,string _nombre,string _segundoNombre, string _apellido, string _segundoApellido,string _fecha,string _horaIngreso,string _horaSalida){
 	puesto=_puesto;
 	placa=_placa;
 	cedula=_cedula;
@@ -13,7 +13,7 @@ Historial::Historial(int _puesto, string _placa,string _cedula,string _nombre,st
     segundoApellido=_segundoApellido;
     fecha=_fecha;
     horaIngreso=_horaIngreso;
-    horaSalida="parqueado";
+    horaSalida=_horaSalida;
 
 	siguiente=NULL;
 	anterior=NULL;

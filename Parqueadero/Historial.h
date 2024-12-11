@@ -22,7 +22,7 @@ class Historial{
 
 	public :
 	//constructor
-	Historial(int _puesto, string _placa,string _cedula,string _nombre,string _segundoNombre, string _apellido, string _segundoApellido,string _fecha,string _horaIngreso);
+	Historial(int _puesto, string _placa,string _cedula,string _nombre,string _segundoNombre, string _apellido, string _segundoApellido,string _fecha,string _horaIngreso,string _horaSalida);
 
 	
 		//Destructor
