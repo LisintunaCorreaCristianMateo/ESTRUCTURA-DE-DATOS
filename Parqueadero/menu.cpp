@@ -189,6 +189,44 @@ string validarPlaca() {
     }
     return placa;
 }
+int ingresar_entero(const char *mensaje) {
+    char num[10]; // Buffer para almacenar el n�mero
+    char c;
+    int i = 0;
+    bool tiene_digito = false; // Bandera para verificar si se ingres� al menos un d�gito
+    int valor;
+
+    cout << mensaje;
+
+    while (true) {
+        c = getch();
+
+        if (c >= '0' && c <= '9') { // Si es un n�mero
+            if (i < 9) { // Verifica que no exceda el tama�o del buffer
+                cout << c; // Muestra el car�cter
+                num[i++] = c; // Agrega al arreglo
+                tiene_digito = true; // Marca que se ingres� al menos un d�gito
+            }
+        } else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
+            cout << "\b \b"; // Retrocede, borra el car�cter en pantalla
+            i--; // Reduce el �ndice para eliminar el �ltimo car�cter ingresado
+            if (i == 0) {
+                tiene_digito = false; // Si no quedan caracteres, resetea la bandera
+            }
+        } else if (c == 13) { // Si se presiona Enter
+            if (tiene_digito) { // Permitir Enter solo si se ingres� al menos un d�gito
+                break;
+            } else {
+                cout << '\a'; // Beep para indicar error
+            }
+        }
+    }
+
+    num[i] = '\0'; // Termina la cadena
+    valor = atoi(num); // Convierte la cadena a entero
+
+    return valor;
+}
 
 
 bool ListaCircularDoble::existePlaca(const string& placa) {
@@ -344,10 +382,10 @@ void procesarSeleccion(const string& opcion) {
 
 	 else if (opcion == "Retirar vehiculo") {
         
-	 	 int puesto;
-        //manejadorArchivos.leerDesdeArchivo("estudiantes.txt",lista);
-	        cout << "Ingrese el numero del puesto a liberar: ";
-            cin >> puesto;
+	 	 
+            int puesto=ingresar_entero( "Ingrese el numero del puesto a liberar: ");
+
+
             parqueadero.retirarVehiculo(puesto);
 		                
         	manejadorArchivos.guardarDatos(parqueadero);
