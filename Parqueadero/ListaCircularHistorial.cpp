@@ -137,6 +137,34 @@ void ListaCircularHistorial::agregarAlFinal(Historial* nuevo) {
         cabeza->setAnterior(nuevo);
     }
 }
+void ListaCircularHistorial::buscarPorFecha(const string& fechaBuscada) {
+    if (!cabeza) {
+        cout << "No hay historial registrado." << endl;
+        return;
+    }
 
+    Historial* actual = cabeza;
+    bool encontrado = false;
+
+    // Recorrer la lista circular para buscar coincidencias de fecha
+    do {
+        if (actual->getFecha() == fechaBuscada) {
+            cout << "Historial encontrado: " << endl;
+            cout << "Nombre: " << actual->getNombre() << " " << actual->getApellido() << endl;
+            cout << "Cedula: " << actual->getCedula() << endl;
+            cout << "Placa: " << actual->getPlaca() << endl;
+            cout << "Fecha: " << actual->getFecha() << endl;
+            cout << "Hora de ingreso: " << actual->gethoraIngreso() << endl;
+            cout << "Hora de salida: " << actual->gethoraSalida() << endl;
+            cout << "----------------------------------" << endl;
+            encontrado = true;
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabeza);
+
+    if (!encontrado) {
+        cout << "No se encontró historial para la fecha: " << fechaBuscada << endl;
+    }
+}
                     
 

@@ -40,6 +40,7 @@ public:
 	void mostrarDatos();
 	void mostrarAutos();
 	bool existePlaca(const string& placa);
+	
 
 };
 

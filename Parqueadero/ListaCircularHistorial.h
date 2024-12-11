@@ -51,6 +51,7 @@ public:
     void mostrarHistorial();
     void existeVehiculo(string placa, string hora );
     void agregarAlFinal(Historial* nuevo);
+    void buscarPorFecha(const string& fechaBuscada);
 
    
 

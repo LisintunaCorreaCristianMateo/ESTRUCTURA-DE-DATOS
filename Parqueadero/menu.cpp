@@ -25,8 +25,8 @@ void menu(){
 
 	
 	
-	const int numOpciones = 7;
-    string opciones[numOpciones] = {"Ver parqueadero", "Ingresar vehiculo", "Retirar vehiculo","Ver Datos","Ver Vehiculos","Ver Historial", "Salir"};
+	const int numOpciones = 8;
+    string opciones[numOpciones] = {"Ver parqueadero", "Ingresar vehiculo", "Retirar vehiculo","Ver Datos","Ver Vehiculos","Ver Historial","Busqueda por fecha", "Salir"};
     int opcionSeleccionada = 0; // Inicializamos la opci�n seleccionada en 0
 
     while (true) {
@@ -407,6 +407,14 @@ void procesarSeleccion(const string& opcion) {
     else if(opcion=="Ver Historial"){
     	
          Historial.mostrarHistorial();
+    }
+    else if(opcion=="Busqueda por fecha"){
+         string fechaBuscada;
+        cout << "Ingrese la fecha que desea buscar (formato: dd/mm/aaaa): ";
+        cin >> fechaBuscada;
+
+    // Buscar historial por fecha
+    Historial.buscarPorFecha(fechaBuscada);
     }
 
 	else if (opcion == "Salir") {
