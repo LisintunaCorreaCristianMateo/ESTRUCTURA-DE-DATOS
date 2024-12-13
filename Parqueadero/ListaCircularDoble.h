@@ -5,7 +5,6 @@
 
 // Clase ListaCircularDoble para el manejo del parqueadero
 class ListaCircularDoble {
-	
 private:
     Nodo* cabezaIzquierda;    // Cabeza de la fila izquierda
     Nodo* cabezaDerecha;      // Cabeza de la fila derecha
@@ -40,6 +39,7 @@ public:
 	void mostrarDatos();
 	void mostrarAutos();
 	bool existePlaca(const string& placa);
+	bool existeCedula(const string& cedula);
 	
 
 };

@@ -231,7 +231,7 @@ void ListaCircularDoble::retirarVehiculo(int puesto) {
                 
                
                 
-                historial.existeVehiculo(placa,obtenerHoraActual());
+                historial.cambiarFechaSalida(placa,obtenerHoraActual());
                 manejadorArchivosHistorial2.guardarHistorial(historial);
                 //cout<<"\nLa placa que fue enviada a comparar es : "<<placa<<"A las : "<<obtenerHoraActual()<<endl;
 
@@ -258,7 +258,7 @@ void ListaCircularDoble::retirarVehiculo(int puesto) {
                 placa=actual->getPlaca();
                 
                 manejadorArchivosHistorial2.leerHistorial(historial);
-                historial.existeVehiculo(placa,obtenerHoraActual());
+                historial.cambiarFechaSalida(placa,obtenerHoraActual());
                  manejadorArchivosHistorial2.guardarHistorial(historial);
 
                 actual->setOcupado(false);

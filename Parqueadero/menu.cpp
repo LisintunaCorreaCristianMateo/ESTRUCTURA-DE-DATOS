@@ -25,8 +25,8 @@ void menu(){
 
 	
 	
-	const int numOpciones = 8;
-    string opciones[numOpciones] = {"Ver parqueadero", "Ingresar vehiculo", "Retirar vehiculo","Ver Datos","Ver Vehiculos","Ver Historial","Busqueda por fecha", "Salir"};
+	const int numOpciones = 9;
+    string opciones[numOpciones] = {"Ver parqueadero", "Ingresar vehiculo", "Retirar vehiculo","Ver Datos","Ver Vehiculos","Ver Historial","Busqueda por fecha","Buscar por Hora" ,"Salir"};
     int opcionSeleccionada = 0; // Inicializamos la opci�n seleccionada en 0
 
     while (true) {
@@ -251,6 +251,28 @@ bool ListaCircularDoble::existePlaca(const string& placa) {
 
     return false; // Placa no encontrada
 }
+bool ListaCircularDoble::existeCedula(const string& cedula) {
+    Nodo* actual = cabezaIzquierda;
+
+    // Verificar en la fila izquierda
+    do {
+        if (actual->getCedula() == cedula) {
+            return true; // Placa encontrada
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabezaIzquierda);
+
+    // Verificar en la fila derecha
+    actual = cabezaDerecha;
+    do {
+        if (actual->getCedula() == cedula) {
+            return true; // Placa encontrada
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabezaDerecha);
+
+    return false; // Placa no encontrada
+}
 
 
 
@@ -302,6 +324,54 @@ string ingresar_string(const char* mensaje) {
 
     return string(cadena); // Retorna como un objeto de tipo string
 }
+string ingresar_string2(const char* mensaje) {
+    char cadena[100]; // Buffer para la cadena
+    char c;
+    int i = 0;
+    bool tiene_letra = false; // Bandera para verificar si se ingresó al menos una letra
+
+    cout << mensaje;
+
+    while (true) {
+        c = _getch();
+
+        if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ' ') {
+            if (i < 99) { // Verificar que no exceda el tamaño del buffer
+                cout << c; // Muestra el carácter
+                cadena[i++] = c; // Agrega el carácter al arreglo
+                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                    tiene_letra = true; // Marca que se ingresó al menos una letra
+                }
+            }
+        } else if (c == 8 && i > 0) { // Si se presiona Backspace y hay algo que borrar
+            cout << "\b \b"; // Retrocede y borra el carácter en pantalla
+            if ((cadena[i - 1] >= 'A' && cadena[i - 1] <= 'Z') || 
+                (cadena[i - 1] >= 'a' && cadena[i - 1] <= 'z')) {
+                tiene_letra = false; // Puede ser necesario revisar si quedan letras
+                for (int j = 0; j < i - 1; j++) {
+                    if ((cadena[j] >= 'A' && cadena[j] <= 'Z') || 
+                        (cadena[j] >= 'a' && cadena[j] <= 'z')) {
+                        tiene_letra = true;
+                        break;
+                    }
+                }
+            }
+            i--; // Reduce el índice
+        } else if (c == 13) { // Si se presiona Enter
+            // Se permite Enter sin validación si no hay ninguna letra
+            if (i == 0 || tiene_letra) { 
+                break;
+            } else {
+                cout << '\a'; // Beep para indicar error
+            }
+        }
+    }
+
+    cadena[i] = '\0'; // Termina la cadena con el null terminator
+    cout << endl; // Salto de línea al finalizar
+
+    return string(cadena); // Retorna como un objeto de tipo string
+}
 
 
 // Funci�n para procesar la selecci�n de una opci�n
@@ -327,7 +397,7 @@ void procesarSeleccion(const string& opcion) {
     
 	else if (opcion == "Ingresar vehiculo") {
 		
-			
+			manejadorArchivos.guardarPlacas(parqueadero);
          while (true) {
             string placa = validarPlaca();
 
@@ -336,42 +406,49 @@ void procesarSeleccion(const string& opcion) {
             cout << "La placa " << placa << " ya está registrada en el parqueadero. Intente con otra.\n";
             }
              else {
-            
-                string cedula = ingresar_cedula("Ingrese la cedula (10 d�gitos): ");
-                string nombre = ingresar_string("Ingrese Primer Nombre: ");
-                 // Hacer el segundo nombre opcional
-            cout << "Ingrese Segundo Nombre (opcional, presione Enter para omitir): ";
-            cin.ignore(); // Limpiar el buffer de entrada
-            string nombre2;
-            getline(cin, nombre2); // Leer l�nea completa
-            if (nombre2.empty()) {
-                nombre2 = ""; // Si est� vac�o, asignar un valor en blanco
-            }
-            
-                string apellido = ingresar_string("Ingrese Primer Apellido: ");
-                // Hacer el segundo apellido opcional
-            cout << "Ingrese Segundo Apellido (opcional, presione Enter para omitir): ";
-            cin.ignore(); // Limpiar el buffer de entrada
-            string apellido2;
-            getline(cin, apellido2); // Leer l�nea completa
-            if (apellido2.empty()) {
-                apellido2 = ""; // Si est� vac�o, asignar un valor en blanco
-            }
-                
-                
-                parqueadero.ingresarVehiculo(placa,cedula,nombre,nombre2,apellido,apellido2);
 
-            
-        		manejadorArchivos.guardarDatos(parqueadero);
-        		manejadorArchivos.guardarPlacas(parqueadero);
-                break; // Salir del bucle una vez que se haya ingresado el vehículo
+                    bool existePlaca=false;
+                    existePlaca=Historial.existeVehiculoHistorial(placa,parqueadero);
+
+
+
+                    if(existePlaca==false){
+
+                        string cedula = ingresar_cedula("Ingrese la cedula (10 d�gitos): ");
+
+
+
+                        if(parqueadero.existeCedula(cedula)){
+                            cout << "La cedula " << cedula << " ya está registrada en el parqueadero. Intente con otra.\n";
+                        }
+                        else{
+
+                            string nombre = ingresar_string("Ingrese Primer Nombre: ");
+                            string nombre2=ingresar_string2("Ingrese Segundo Apellido (opcional): ");
+                            string apellido = ingresar_string("Ingrese Primer Apellido: ");
+                            string apellido2 = ingresar_string2("Ingrese Segundo Apellido(opcionl): ");
+
+                            parqueadero.ingresarVehiculo(placa,cedula,nombre,nombre2,apellido,apellido2);
+
+                        
+                            // Salir del bucle una vez que se haya ingresado el vehículo
+                            manejadorArchivos.guardarDatos(parqueadero);
+                            manejadorArchivos.guardarPlacas(parqueadero); 
+                        }
+          
+                    }
+                    else{
+                            manejadorArchivos.guardarDatos(parqueadero);
+                            manejadorArchivos.guardarPlacas(parqueadero);    
+                    }
+
+                
+
+                 break;
              }
 
             
-     
-          
-   
-        
+    
 	
         }
         	
@@ -416,10 +493,24 @@ void procesarSeleccion(const string& opcion) {
     // Buscar historial por fecha
     Historial.buscarPorFecha(fechaBuscada);
     }
+    else if (opcion == "Buscar por Hora") {
+	    string horaInicio, horaFin;
+	    
+	    
+	    cout << "Ingrese la hora de inicio (formato HH:MM): ";
+	    cin >> horaInicio;
+	    
+	    cout << "Ingrese la hora de fin (formato HH:MM): ";
+	    cin >> horaFin;
+	
+	    // Buscar historial por rango de horas
+	    Historial.buscarPorHoras(horaInicio, horaFin);
+	}
 
 	else if (opcion == "Salir") {
         cout << "Saliendo del programa...\n";
-    } else {
+    } 
+    else {
         cout << "Opcion no valida.\n";
     }
     system("pause"); // Pausa para permitir que el usuario lea el mensaje

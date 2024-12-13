@@ -1,4 +1,5 @@
     #include "ListaCircularHistorial.h"
+    #include "ListaCircularDoble.h"
 	#include<iostream>
 	#include <vector>
 	#include <ctime>
@@ -9,10 +10,26 @@
 
 
     using namespace std;
+
+
 ListaCircularHistorial::~ListaCircularHistorial(){
 
 }
 
+void ListaCircularHistorial::limpiarLista() {
+    if (!cabeza) {
+        return; // La lista ya est� vac�a
+    }
+
+    Historial* actual = cabeza;
+    do {
+        Historial* siguiente = actual->getSiguiente(); // Almacenar el siguiente nodo
+        delete actual; // Liberar memoria del nodo actual
+        actual = siguiente; // Avanzar al siguiente nodo
+    } while (actual != cabeza); // Repetir hasta volver a la cabeza
+
+    cabeza = nullptr; // Despu�s de eliminar todos los nodos, la lista queda vac�a
+}
 
 void ListaCircularHistorial::ingresarVehiculo(int puesto, string placa, string cedula, string nombre, 
                                               string nombre2, string apellido, string apellido2, 
@@ -91,8 +108,37 @@ void ListaCircularHistorial::mostrarHistorial() {
 
     cout << endl;
 }
+void ListaCircularHistorial::buscarPorHoras(const std::string& horaInicio, const std::string& horaFin) {
+    if (!cabeza) {
+        cout << "El historial está vacío.\n";
+        return;
+    }
 
-void ListaCircularHistorial::existeVehiculo(string placa, string hora) {
+    Historial* actual = cabeza;
+    bool encontrado = false;
+
+    std::cout << "Vehículos ingresados entre las " << horaInicio << " y las " << horaFin << ":\n";
+
+    do {
+        // Compara las horas (asegurarse de que estén en formato "HH:MM")
+        if (actual->gethoraIngreso() >= horaInicio && actual->gethoraIngreso() <= horaFin) {
+            encontrado = true;
+            // Mostrar los datos del nodo actual
+            cout << "Puesto: " << actual->getPuesto()
+                      << ", Placa: " << actual->getPlaca()
+                      << ", Hora de Ingreso: " << actual->gethoraIngreso()
+                      << ", Fecha: " << actual->getFecha() << std::endl;
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabeza); // La lista es circular, termina cuando regresa a la cabeza
+
+    if (!encontrado) {
+        cout << "No se encontraron vehículos en el rango de horas especificado.\n";
+    }
+}               
+
+
+void ListaCircularHistorial::cambiarFechaSalida(string placa, string hora) {
     
     if (!cabeza) { // Verifica si la lista está vacía
         cout << "Lista historial vacia." << endl;
@@ -118,6 +164,31 @@ void ListaCircularHistorial::existeVehiculo(string placa, string hora) {
         cout << "La placa " << placa << " no fue encontrada en el historial." << endl;
     }
 }
+bool ListaCircularHistorial::existeVehiculoHistorial(string placa,ListaCircularDoble &parqueadero) {
+    if (!cabeza) { // Verifica si la lista está vacía
+        cout << "Lista historial vacía." << endl;
+        return false;
+    }
+
+    Historial* actual = cabeza;
+
+    do {
+        cout << "Revisando placa: " << actual->getPlaca() << endl;
+        if (actual->getPlaca() == placa) {
+            cout << "Placa encontrada: " << actual->getPlaca() << endl;
+            
+            // Espacio para tu código
+            parqueadero.ingresarVehiculo(actual->getPlaca(),actual->getCedula(),actual->getNombre(),actual->getSegundoNombre(),actual->getApellido(),actual->getSegundoApellido());
+            
+            return true;
+        }
+        actual = actual->getSiguiente();
+    } while (actual != cabeza);
+
+    cout << "La placa " << placa << " no fue encontrada en el historial." << endl;
+    return false;
+}
+
 void ListaCircularHistorial::agregarAlFinal(Historial* nuevo) {
     Historial* cabeza = getCabeza();
 
@@ -126,7 +197,9 @@ void ListaCircularHistorial::agregarAlFinal(Historial* nuevo) {
         setCabeza(nuevo);
         nuevo->setSiguiente(nuevo); // Apuntando al mismo nodo (circularidad)
         nuevo->setAnterior(nuevo);
-    } else {
+        //cout<<"El nuevo elemento sera la cabeza \n";
+    } 
+    else {
         // Si no está vacía, insertar el nodo al final
         Historial* ultimo = cabeza->getAnterior(); // Nodo anterior a la cabeza
 
@@ -135,7 +208,10 @@ void ListaCircularHistorial::agregarAlFinal(Historial* nuevo) {
         nuevo->setAnterior(ultimo);
         nuevo->setSiguiente(cabeza);
         cabeza->setAnterior(nuevo);
+        //cout<<"Anadido a la lista el propietario : " << ultimo->getNombre;
+
     }
+
 }
 void ListaCircularHistorial::buscarPorFecha(const string& fechaBuscada) {
     if (!cabeza) {

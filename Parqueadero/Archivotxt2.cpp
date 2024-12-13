@@ -41,7 +41,7 @@ void Archivotxt2::guardarHistorial(ListaCircularHistorial &hist) {
                 << actual->gethoraIngreso() << ","
                 << actual->gethoraSalida() << endl;
 
-        cout << "Guardando: " << actual->getNombre() << " " << actual->getPlaca() << endl;  // Depuración
+        cout << "/nGuardando: " << actual->getNombre() << " " << actual->getPlaca() << endl;  // Depuración
 
         actual = actual->getSiguiente();
     } while (actual != cabeza);
@@ -84,7 +84,7 @@ void Archivotxt2::leerHistorial(ListaCircularHistorial &hist) {
 
         // Insertar el nuevo nodo en la lista utilizando un método de la clase ListaCircularHistorial
         hist.agregarAlFinal(nuevo); // Nuevo método para manejar la inserción en la lista circular
-          cout << "Propietario leído: " << nombre;
+       
     }
 
     archivo.close();
