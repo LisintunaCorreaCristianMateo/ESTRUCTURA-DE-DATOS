@@ -18,7 +18,7 @@ class Historial{
 		string horaSalida;
 		   
 		Historial* siguiente;         // Apunta al siguiente nodo
-		Historial* anterior;
+		
 
 	public :
 	//constructor
@@ -53,7 +53,7 @@ class Historial{
 
     Historial* getSiguiente();
 
-    Historial* getAnterior();
+   
 
     // Setters
 
@@ -80,7 +80,6 @@ class Historial{
 
     void setSiguiente(Historial* nodo);
 
-    void setAnterior(Historial* nodo);
 
 };
 

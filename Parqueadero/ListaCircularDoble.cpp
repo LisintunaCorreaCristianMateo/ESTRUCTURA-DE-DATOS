@@ -208,7 +208,7 @@ void ListaCircularDoble::ingresarVehiculo(string placa, string cedula, string no
     //Guardar copia de los datos en el historial
     historial.ingresarVehiculo(puestoSeleccionado->getPuesto() ,placa,cedula,nombre,segundoNombre,apellido,segundoApellido,fecha,horaIngreso);
 
-    manejadorArchivosHistorial2.guardarHistorial(historial);
+   // manejadorArchivosHistorial2.guardarHistorial(historial);
     // Confirmaci�n de ingreso
     cout << "Vehiculo con placa " << placa << " ingresado en el puesto " << puestoSeleccionado->getPuesto() << "." << endl;
 }

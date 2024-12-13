@@ -397,7 +397,7 @@ void procesarSeleccion(const string& opcion) {
     
 	else if (opcion == "Ingresar vehiculo") {
 		
-			manejadorArchivos.guardarPlacas(parqueadero);
+			
          while (true) {
             string placa = validarPlaca();
 
@@ -409,6 +409,7 @@ void procesarSeleccion(const string& opcion) {
 
                     bool existePlaca=false;
                     existePlaca=Historial.existeVehiculoHistorial(placa,parqueadero);
+                    
 
 
 
@@ -430,17 +431,16 @@ void procesarSeleccion(const string& opcion) {
 
                             parqueadero.ingresarVehiculo(placa,cedula,nombre,nombre2,apellido,apellido2);
 
-                        
-                            // Salir del bucle una vez que se haya ingresado el vehículo
-                            manejadorArchivos.guardarDatos(parqueadero);
-                            manejadorArchivos.guardarPlacas(parqueadero); 
                         }
           
                     }
-                    else{
+                    
                             manejadorArchivos.guardarDatos(parqueadero);
-                            manejadorArchivos.guardarPlacas(parqueadero);    
-                    }
+                            manejadorArchivos.guardarPlacas(parqueadero);
+                            
+                            manejadorArchivosHistorial.guardarHistorial(Historial);
+
+                    
 
                 
 

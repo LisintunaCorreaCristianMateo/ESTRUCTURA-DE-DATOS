@@ -16,7 +16,7 @@ Historial::Historial(int _puesto, string _placa,string _cedula,string _nombre,st
     horaSalida=_horaSalida;
 
 	siguiente=NULL;
-	anterior=NULL;
+	
 }
 Historial::~Historial(){
 	
@@ -61,8 +61,7 @@ Historial::~Historial(){
     Historial* Historial::getSiguiente()  {
      return siguiente; }
 
-    Historial* Historial::getAnterior()  {
-     return anterior; }
+    
 
     // Setters
 
@@ -72,8 +71,6 @@ Historial::~Historial(){
     void Historial::setSiguiente(Historial* nodo) { 
         siguiente = nodo; }
         
-    void Historial::setAnterior(Historial* nodo) { 
-        anterior = nodo; }
 
     void Historial::setCedula(string _cedula ){
         cedula=_cedula;

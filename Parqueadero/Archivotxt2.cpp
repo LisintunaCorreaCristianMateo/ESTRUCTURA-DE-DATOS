@@ -11,7 +11,7 @@ using namespace std;
 
 void Archivotxt2::guardarHistorial(ListaCircularHistorial &hist) {
     // Abrir el archivo en modo sobrescritura
-    ofstream archivo("Historial.txt");
+    ofstream archivo("Historial.txt", ios::out | ios::trunc);
 
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo para guardar el historial." << endl;
@@ -19,11 +19,11 @@ void Archivotxt2::guardarHistorial(ListaCircularHistorial &hist) {
     }
 
     Historial* actual = hist.getCabeza();
-    Historial* cabeza = actual;
+    
 
     // Verifica que la lista no está vacía
-    if (!cabeza) {
-        cout << "No hay historial para guardar." << endl;
+    if (actual==NULL) {
+        cout << "La lista historial esta vacia." << endl;
         archivo.close();
         return;
     }
@@ -41,10 +41,14 @@ void Archivotxt2::guardarHistorial(ListaCircularHistorial &hist) {
                 << actual->gethoraIngreso() << ","
                 << actual->gethoraSalida() << endl;
 
-        cout << "/nGuardando: " << actual->getNombre() << " " << actual->getPlaca() << endl;  // Depuración
-
+        cout << "/nGuardado: " << actual->getNombre() << " " << actual->getPlaca() << endl;  // Depuración
+                if (!archivo) {
+                    cout << "Error al escribir en el archivo." << endl;
+                    archivo.close();
+                    return;
+                }
         actual = actual->getSiguiente();
-    } while (actual != cabeza);
+    } while (actual != NULL);
 
     archivo.flush();  // Asegurar que se escriban los datos
     archivo.close();
@@ -55,26 +59,33 @@ void Archivotxt2::guardarHistorial(ListaCircularHistorial &hist) {
 
 
 void Archivotxt2::leerHistorial(ListaCircularHistorial &hist) {
-    hist.limpiarLista(); // Limpiar la lista antes de agregar nuevos datos
+    // Limpiar la lista antes de agregar nuevos datos
 
-    ifstream archivo("Historial.txt");
+    ifstream archivo("Historial.txt", ios::in);
     if (!archivo.is_open()) {
         cout << "Error al abrir el archivo: " << "Historial.txt" << endl;
         return;
     }
+    hist.limpiarLista();
 
     string linea;
     while (getline(archivo, linea)) {
         // Parsear cada línea del archivo
-        stringstream ss(linea);
+        istringstream flujo(linea);
         string nombre, segundoNombre, apellido, segundoApellido, cedula, placa, fecha, horaIngreso, horaSalida;
         int puesto;
 
         // Leer los valores separados por comas
-        if (!getline(ss, nombre, ',') || !getline(ss, segundoNombre, ',') || !getline(ss, apellido, ',') ||
-            !getline(ss, segundoApellido, ',') || !getline(ss, cedula, ',') || !(ss >> puesto) || !ss.ignore() ||
-            !getline(ss, placa, ',') || !getline(ss, fecha, ',') || !getline(ss, horaIngreso, ',') ||
-            !getline(ss, horaSalida, ',')) {
+        if (!getline(flujo, nombre, ',') || 
+            !getline(flujo, segundoNombre, ',') || 
+            !getline(flujo, apellido, ',') ||
+            !getline(flujo, segundoApellido, ',') || 
+            !getline(flujo, cedula, ',') || 
+            !(flujo >> puesto) || !flujo.ignore() ||
+            !getline(flujo, placa, ',') || 
+            !getline(flujo, fecha, ',') || 
+            !getline(flujo, horaIngreso, ',') ||
+            !getline(flujo, horaSalida, ',')) {
             cerr << "Error al leer los datos de la línea: " << linea << endl;
             continue; // Saltar esta línea si hubo un error en la lectura
         }
@@ -82,12 +93,27 @@ void Archivotxt2::leerHistorial(ListaCircularHistorial &hist) {
         // Crear un nuevo nodo con los datos leídos
         Historial* nuevo = new Historial(puesto, placa, cedula, nombre, segundoNombre, apellido, segundoApellido, fecha, horaIngreso, horaSalida);
 
-        // Insertar el nuevo nodo en la lista utilizando un método de la clase ListaCircularHistorial
-        hist.agregarAlFinal(nuevo); // Nuevo método para manejar la inserción en la lista circular
-       
+        // Agregar el nodo a la lista
+        if ( hist.getCabeza() == NULL) {
+             hist.setCabeza(nuevo);
+             cout<<"La cabeza estuvo vacia, este elemento "<<nuevo->getNombre()<<" sera la cabeza ";
+        } else {
+            Historial* temp =  hist.getCabeza();
+            while (temp->getSiguiente() != NULL) {
+                temp = temp->getSiguiente();
+            }
+            
+            temp->setSiguiente(nuevo);
+
+            nuevo->setSiguiente(NULL);
+            
+            cout<<"Este propietario fue agregado al final de la lista: "<<nuevo->getNombre();
+            cout<<endl;
+        }
     }
 
-    archivo.close();
+    archivo.close(); // Cerrar el archivo
+    
     cout << "Datos cargados correctamente desde el archivo: " << "Historial.txt" << endl;
 }
 
